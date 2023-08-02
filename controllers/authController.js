@@ -65,16 +65,20 @@ const signin = async (req, res) => {
         errorMessage: 'User does not exists.',
       });
     }
-    const { id, password: storedPassword } = user[0]
+    const { id, email, password: storedPassword } = user[0]
     const isValidCredentials = await verifyCredentials(password, storedPassword) && isUserExists;
 
     if (isValidCredentials) {
+      const logedInUser = {
+        id,
+        email
+      }
       const token = generateToken(id);
       req.session.cookies = token;
       recordSignin(db, id);
       res.json({
         message: 'Login Successful.',
-        user,
+        logedInUser,
       });
     } else {
       res.json({
