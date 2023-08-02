@@ -65,20 +65,15 @@ const signin = async (req, res) => {
         errorMessage: 'User does not exists.',
       });
     }
-    const { id, email, password: storedPassword } = user[0]
+    const { id, password: storedPassword } = user[0]
     const isValidCredentials = await verifyCredentials(password, storedPassword) && isUserExists;
 
     if (isValidCredentials) {
-      const logedInUser = {
-        id,
-        email
-      }
       const token = generateToken(id);
       req.session.cookies = token;
       recordSignin(db, id);
       res.json({
         message: 'Login Successful.',
-        logedInUser,
       });
     } else {
       res.json({
@@ -86,7 +81,7 @@ const signin = async (req, res) => {
       });
     }
   } catch (error) {
-    return error;
+    res.send(error);
   }
 };
 
@@ -94,7 +89,9 @@ const signout = async (req, res) => {
   const db = req.app.get('db');
   req.session.cookies = null;
   await db('auth').update('signout', true);
-  res.send('Signed out.')
+  res.json({
+    message: 'Signed out.',
+  });
 };
 
 const getCurrentUser = async (db, id) => {

@@ -9,13 +9,19 @@ const authenticationMiddleware = async (req, res, next) => {
       const id = jwt.verify(cookies, 'demoapp');
       const user = await getCurrentUser(db, id);
       if(user) {
-        res.send(user);
+        res.json({
+          user
+        });
       } else {
-        res.send('Unauthentication.');
+        res.json({
+          message: 'Unauthentication.',
+        });
       }
       next();
     } else {
-      res.send('Not signed in.');
+      res.json({
+        message: 'Not signed in.',
+      });
     }
   } catch (error) {
     res.send(error);
