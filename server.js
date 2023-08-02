@@ -23,6 +23,6 @@ server.use(cookieSession({
 
 
 // Routers
-server.use(userRouter);
+server.use('/api', userRouter);
 
 module.exports = server;
