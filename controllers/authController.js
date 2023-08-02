@@ -1,4 +1,4 @@
-const { create, findOne } = require('./usersService');
+const { create, findOne } = require('./usersController');
 const bcrypt = require('bcrypt');
 const saltRounds = 5;
 const jwt = require('jsonwebtoken');

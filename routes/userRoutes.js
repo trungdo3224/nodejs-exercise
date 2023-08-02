@@ -2,7 +2,7 @@ const {
   signup, 
   signin,
   signout
-} = require('../services/auth.service');
+} = require('../controllers/authController');
 const authenticationMiddleware = require('../middlewares/authMiddleware');
 
 const userRouter = require('express').Router();

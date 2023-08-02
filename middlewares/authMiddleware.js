@@ -1,4 +1,4 @@
-const { getCurrentUser } = require("../services/auth.service");
+const { getCurrentUser } = require("../controllers/authController");
 const jwt = require('jsonwebtoken');
 
 const authenticationMiddleware = async (req, res, next) => {

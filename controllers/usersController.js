@@ -1,17 +1,44 @@
-const { 
-  signup, 
-  signin,
-  signout
-} = require('../services/auth.service');
-const authenticationMiddleware = require('../middlewares/authMiddleware');
+const { uuid } = require('uuidv4');
 
-const userRouter = require('express').Router();
+const create = async (db, email, password) => {
+  const isTableExists = await db.schema.hasTable('users');
+  try {
+    if(!isTableExists) {
+      await db.schema.createTable('users', function(table) {
+        table.string('id').primary();
+        table.string('email').unique();
+        table.string('password');
+      });
+    }
+    await db
+    .insert({
+      id: uuid(),
+      email: email,
+      password: password,
+    })
+    .into('users')
+  } catch (error) {
+    return error;
+  }
+};
 
+const findOne = async (db, email = '', id = '') => {
+  try {
+    const user = await db('users')
+      .where({
+        email,
+      })
+      .orWhere({
+        id
+      })
+      .select('*')
+    return user;
+  } catch (error) {
+    return error;
+  }
+};
 
-userRouter.post('/users/signup', signup);
-userRouter.post('/users/signin', signin);
-userRouter.get('/users', authenticationMiddleware);
-userRouter.post('/users/signout', signout);
-
-
-module.exports = userRouter;
+module.exports = {
+  findOne,
+  create,
+};
